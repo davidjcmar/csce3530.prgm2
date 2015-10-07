@@ -68,7 +68,7 @@ int main (void)
 	}
 	else
 	{
-		recv (sock_descrip, message, Size_recv, 0);
+		recv (sock_descrip, message, size_recv, 0);
 		printf ("%s",message);
 	}
 	printf ("size_recv: %d\n",size_recv);
