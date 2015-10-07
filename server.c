@@ -18,7 +18,6 @@ void parse_client (char* message, char* url, char* host)
 {
 //	printf ("message length: %d\n",strlen(message));
 	int i,j;
-	int size_recv;
 	int boolean=0;
 
 	memset(host,'\0',256);
@@ -67,6 +66,7 @@ int main (void)
 {
 	int sock_descript, sock_cli_ser, sock_inet, size;
 	int i,boolean;
+	int size_recv;
 	struct sockaddr_in server, client, proxy;
 	char message[MESLEN], url[MESLEN-256], host[256], buffer[MESLEN];
 	struct hostent* he;
