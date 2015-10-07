@@ -201,10 +201,6 @@ int main (void)
 				break;
 		}
 	}
-		while (recv(sock_inet,buffer,MESLEN,0) != 0)
-		{
-			write (sock_cli_ser, buffer, strlen(buffer));
-		}
 //	printf ("%s",buffer); //testing 
 //	printf ("strlen: %d\n",strlen(buffer)); //testing
 

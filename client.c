@@ -60,7 +60,7 @@ int main (void)
 	while (1)
 	{
 		memset (message, '\0', MESLEN);
-		if ((size_recv=recv(sock_descrip, message, MESLEN)) < 0)
+		if ((size_recv=read(sock_descrip, message, MESLEN)) < 0)
 		{
 			printf ("Failed to receive message from server.\n");
 			return 1;
