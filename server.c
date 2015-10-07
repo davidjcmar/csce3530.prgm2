@@ -196,7 +196,7 @@ int main (void)
 	}
 	else
 	{
-		recv (sock_inet, buffer, size_recv, 0);
+		recv (sock_inet, buffer, MESLEN, 0);
 		write (sock_cli_ser, buffer, strlen(buffer));
 	}
 
