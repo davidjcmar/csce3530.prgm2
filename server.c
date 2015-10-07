@@ -10,7 +10,7 @@ CSCE 3530 Program 2
 #include <netinet/in.h>
 #include <netdb.h>
 #include <arpa/inet.h>
-#define MESLEN 2048 // message length
+#define MESLEN 1000000 // message length
 #define PORTNUM 56565 // server port number
 
 /* parse url from client for GET request */
@@ -200,7 +200,7 @@ int main (void)
 		write (sock_cli_ser, buffer, strlen(buffer));
 	}
 
-	printf ("size_recv: %d\n",size_recv);
+//	printf ("size_recv: %d\n",size_recv);
 	
 //	printf ("%s",buffer); //testing 
 //	printf ("strlen: %d\n",strlen(buffer)); //testing

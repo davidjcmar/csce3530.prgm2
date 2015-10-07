@@ -10,7 +10,7 @@ CSCE 3530 Program 1
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <unistd.h>
-#define MESLEN 2048 // message length
+#define MESLEN 1000000 // message length
 #define PORTNUM 56565 // proxy port number
 
 int main (void)
@@ -71,7 +71,7 @@ int main (void)
 		recv (sock_descrip, message, size_recv, 0);
 		printf ("%s",message);
 	}
-	printf ("size_recv: %d\n",size_recv);
+//	printf ("size_recv: %d\n",size_recv);
 
 //	printf ("%s", message);
 
