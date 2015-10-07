@@ -60,7 +60,7 @@ int main (void)
 	size_recv=0;
 	memset (message, '\0', MESLEN);
 
-	size_recv=recv(sock_descrip, message, MESLEN, MSG_PEEK)
+	size_recv=recv(sock_descrip, message, MESLEN, MSG_PEEK);
 	if (size_recv < 0)
 	{
 		printf ("Failed to receive message from server.\n");
