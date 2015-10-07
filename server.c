@@ -193,13 +193,13 @@ int main (void)
 			close (sock_inet);
 			return 1;
 		}
-			else
-			{
-				write (sock_cli_ser, buffer, strlen(buffer));
-			}
-			if (size_recv==0)
-				break;
+		else
+		{
+			write (sock_cli_ser, buffer, strlen(buffer));
 		}
+		if (size_recv==0)
+				break;
+		
 	}
 //	printf ("%s",buffer); //testing 
 //	printf ("strlen: %d\n",strlen(buffer)); //testing
