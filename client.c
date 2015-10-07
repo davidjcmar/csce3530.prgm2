@@ -62,7 +62,7 @@ int main (void)
 		size_recv=0;
 		memset (message, '\0', MESLEN);
 
-		if ((size_recv=read(sock_descrip, message, MESLEN)) == 0)
+		if ((size_recv=recv(sock_descrip, message, MESLEN,MSG_DONTWAIT)) == 0)
 		{
 			break;
 		}

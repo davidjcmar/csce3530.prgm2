@@ -186,7 +186,7 @@ int main (void)
 	{
 		size_recv=0;
 		memset (message, '\0', MESLEN);
-		if ((size_recv=recv(sock_inet,buffer,MESLEN,0)) < 0)
+		if ((size_recv=recv(sock_inet,buffer,MESLEN,MSG_DONTWAIT)) < 0)
 		{
 			printf ("No reply from webserver.\n");
 			close (sock_descript);
