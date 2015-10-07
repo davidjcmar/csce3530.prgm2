@@ -1,7 +1,7 @@
 /* 
 David Cmar
-CSCE 3530 Program 1
-9/24/2015
+CSCE 3530 Program 2
+10/8/2015
 */
 #include <stdio.h>
 #include <string.h>
@@ -10,7 +10,7 @@ CSCE 3530 Program 1
 #include <netinet/in.h>
 #include <netdb.h>
 #include <arpa/inet.h>
-#define MESLEN 1000000000 // message length
+#define MESLEN 2048 // message length
 #define PORTNUM 56565 // server port number
 
 /* parse url from client for GET request */
@@ -173,14 +173,18 @@ int main (void)
 	}
 	memset (buffer,'\0',MESLEN); // reset buffer
 	/* accept response from webserver */
-	if (recv(sock_inet,buffer,MESLEN,0) < 0)
+	/*if (recv(sock_inet,buffer,MESLEN,0) < 0)
 	{
 		printf ("No reply from webserver.\n");
 		close (sock_descript);
 		close (sock_cli_ser);
 		close (sock_inet);
 		return 1;
-	}
+	}*/
+		while (recv(sock_inet,buffer,MESLEN,0) > 0)
+		{
+			write (sock_cli_ser, buffer, strlen(buffer));
+		}
 //	printf ("%s",buffer); //testing 
 //	printf ("strlen: %d\n",strlen(buffer)); //testing
 

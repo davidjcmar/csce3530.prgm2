@@ -1,7 +1,7 @@
 /* 
 David Cmar
 CSCE 3530 Program 1
-9/24/2015
+10/8/2015
 */
 #include <stdio.h>
 #include <string.h>
@@ -10,7 +10,7 @@ CSCE 3530 Program 1
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <unistd.h>
-#define MESLEN 1000000000 // message length
+#define MESLEN 2048 // message length
 #define PORTNUM 56565 // proxy port number
 
 int main (void)
@@ -51,12 +51,16 @@ int main (void)
 	fgets (message, MESLEN, stdin); // get url
 	write (sock_descrip, message, strlen(message)); // write url to socket
 	/* read response */
-	if (read(sock_descrip, message,MESLEN) == -1)
+	/*if (read(sock_descrip, message,MESLEN) == -1)
 	{
 		printf ("Failed to receive message from server.\n");
 		return 1;
+	}*/
+	while (read(sock_descrip, message,MESLEN) > 0)
+	{
+		printf ("%s", message);
 	}
-	printf ("%s", message);
+//	printf ("%s", message);
 
 	close (sock_descrip);
 	return 0;
