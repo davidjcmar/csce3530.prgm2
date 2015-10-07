@@ -57,26 +57,22 @@ int main (void)
 		printf ("Failed to receive message from server.\n");
 		return 1;
 	}*/
-	while (1)
-	{
-		size_recv=0;
-		memset (message, '\0', MESLEN);
+	size_recv=0;
+	memset (message, '\0', MESLEN);
 
-		if ((size_recv=recv(sock_descrip, message, MESLEN,MSG_DONTWAIT)) == 0)
-		{
-			break;
-		}
-		else if (size_recv < 0)
-		{
-			printf ("Failed to receive message from server.\n");
-			return 1;
-		}
-		else
-		{
-			printf ("%s",message);
-		}
-		printf ("size_recv: %d\n",size_recv);
+	size_recv=recv(sock_descrip, message, MESLEN, MSG_PEEK)
+	if (size_recv < 0)
+	{
+		printf ("Failed to receive message from server.\n");
+		return 1;
 	}
+	else
+	{
+		recv (sock_descrip, message, Size_recv, 0);
+		printf ("%s",message);
+	}
+	printf ("size_recv: %d\n",size_recv);
+
 //	printf ("%s", message);
 
 	close (sock_descrip);

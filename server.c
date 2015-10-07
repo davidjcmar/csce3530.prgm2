@@ -182,26 +182,26 @@ int main (void)
 		close (sock_inet);
 		return 1;
 	}*/
-	while (1)
+
+	size_recv=0;
+	memset (message, '\0', MESLEN);
+	size_recv=recv(sock_inet,buffer,MESLEN,MSG_PEEK);
+	if (size_recv < 0)
 	{
-		size_recv=0;
-		memset (message, '\0', MESLEN);
-		if ((size_recv=recv(sock_inet,buffer,MESLEN,MSG_DONTWAIT)) < 0)
-		{
-			printf ("No reply from webserver.\n");
-			close (sock_descript);
-			close (sock_cli_ser);
-			close (sock_inet);
-			return 1;
-		}
-		else
-		{
-			write (sock_cli_ser, buffer, strlen(buffer));
-		}
-		if (size_recv==0)
-				break;
-		printf ("size_recv: %d\n",size_recv);
+		printf ("No reply from webserver.\n");
+		close (sock_descript);
+		close (sock_cli_ser);
+		close (sock_inet);
+		return 1;
 	}
+	else
+	{
+		recv (sock_inet, buffer, size_recv, 0);
+		write (sock_cli_ser, buffer, strlen(buffer));
+	}
+
+	printf ("size_recv: %d\n",size_recv);
+	
 //	printf ("%s",buffer); //testing 
 //	printf ("strlen: %d\n",strlen(buffer)); //testing
 
