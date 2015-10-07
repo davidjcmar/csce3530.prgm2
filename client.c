@@ -61,7 +61,12 @@ int main (void)
 	{
 		size_recv=0;
 		memset (message, '\0', MESLEN);
-		if ((size_recv=read(sock_descrip, message, MESLEN)) < 0)
+
+		if ((size_recv=read(sock_descrip, message, MESLEN)) == 0)
+		{
+			break;
+		}
+		else if (size_recv < 0)
 		{
 			printf ("Failed to receive message from server.\n");
 			return 1;
@@ -70,8 +75,6 @@ int main (void)
 		{
 			printf ("%s",message);
 		}
-		if (size_recv==0)
-			break;
 		printf ("size_recv: %d\n",size_recv);
 	}
 //	printf ("%s", message);
