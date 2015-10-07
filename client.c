@@ -59,6 +59,7 @@ int main (void)
 	}*/
 	while (1)
 	{
+		size_recv=0;
 		memset (message, '\0', MESLEN);
 		if ((size_recv=read(sock_descrip, message, MESLEN)) < 0)
 		{
