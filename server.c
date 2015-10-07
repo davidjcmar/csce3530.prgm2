@@ -10,7 +10,7 @@ CSCE 3530 Program 1
 #include <netinet/in.h>
 #include <netdb.h>
 #include <arpa/inet.h>
-#define MESLEN 1000000 // message length
+#define MESLEN 1000000000 // message length
 #define PORTNUM 56565 // server port number
 
 /* parse url from client for GET request */

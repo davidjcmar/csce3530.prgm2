@@ -10,7 +10,7 @@ CSCE 3530 Program 1
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <unistd.h>
-#define MESLEN 1000000 // message length
+#define MESLEN 1000000000 // message length
 #define PORTNUM 56565 // proxy port number
 
 int main (void)
