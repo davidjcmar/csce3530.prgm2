@@ -71,6 +71,7 @@ int main (void)
 		}
 		if (size_recv==0)
 			break;
+		printf ("size_recv: %d\n",size_recv);
 	}
 //	printf ("%s", message);
 
