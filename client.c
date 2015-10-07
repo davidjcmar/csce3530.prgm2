@@ -16,6 +16,7 @@ CSCE 3530 Program 1
 int main (void)
 {
 	int sock_descrip;
+	int size_recv, total_recv=0;
 	struct sockaddr_in server;
 	char message[MESLEN];
 
@@ -56,9 +57,20 @@ int main (void)
 		printf ("Failed to receive message from server.\n");
 		return 1;
 	}*/
-	while (read(sock_descrip, message,MESLEN) > 0)
+	while (1)
 	{
-		printf ("%s", message);
+		memset (message, '\0', MESLEN);
+		if ((size_recv=recv(sock_descrip, message, MESLEN)) < 0)
+		{
+			printf ("Failed to receive message from server.\n");
+			return 1;
+		}
+		else
+		{
+			printf ("%s",message);
+		}
+		if (size_recv==0)
+			break;
 	}
 //	printf ("%s", message);
 

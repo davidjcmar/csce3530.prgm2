@@ -18,6 +18,7 @@ void parse_client (char* message, char* url, char* host)
 {
 //	printf ("message length: %d\n",strlen(message));
 	int i,j;
+	int size_recv;
 	int boolean=0;
 
 	memset(host,'\0',256);
@@ -181,7 +182,26 @@ int main (void)
 		close (sock_inet);
 		return 1;
 	}*/
-		while (recv(sock_inet,buffer,MESLEN,0) > 0)
+	while (1)
+	{
+		memset (message, '\0', MESLEN);
+		if ((size_recv=recv(sock_inet,buffer,MESLEN,0)) < 0)
+		{
+			printf ("No reply from webserver.\n");
+			close (sock_descript);
+			close (sock_cli_ser);
+			close (sock_inet);
+			return 1;
+		}
+			else
+			{
+				write (sock_cli_ser, buffer, strlen(buffer));
+			}
+			if (size_recv==0)
+				break;
+		}
+	}
+		while (recv(sock_inet,buffer,MESLEN,0) != 0)
 		{
 			write (sock_cli_ser, buffer, strlen(buffer));
 		}
@@ -189,7 +209,7 @@ int main (void)
 //	printf ("strlen: %d\n",strlen(buffer)); //testing
 
 	/* write request to client socket */
-	write (sock_cli_ser, buffer, strlen(buffer));
+//	write (sock_cli_ser, buffer, strlen(buffer));
 
 	close (sock_inet);
 	close (sock_descript);
