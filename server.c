@@ -124,7 +124,7 @@ char* set_cache (FILE* f_cache, CACHE** cache_list, int id, char* new_url)
 		/* new element to cache */
 		for (i=4;i>0;i--)
 		{
-			printf ("%d: %s\n",i, cache_list[i]->url);
+printf ("new %d: %s\n",i, cache_list[i]->url);
 			cache_list[i]=cache_list[i-1];
 		}
 		strcpy(cache_list[0]->url,new_url);
@@ -144,7 +144,7 @@ printf ("new_data: %s %d\n", cache_list[0]->data,strlen(cache_list[0]->data));
 		temp_node=cache_list[id];
 		for (i=4;i>0;i--)
 		{
-			printf ("%d: %s\n",i, cache_list[i]->url);
+printf ("old %d: %s\n",i, cache_list[i]->url);
 			cache_list[i]=cache_list[i-1];
 		}
 		cache_list[0]=temp_node;
