@@ -86,12 +86,24 @@ int chk_blist (FILE* f_blist, char* message, char blist[][256])
 	return 0;
 }
 /* check if page is in cache */
-int chk_cache (CACHE* cache_list, char* message)
+int chk_cache (CACHE** cache_list, char* message)
 {
-
+	int i;
+	char buffer[strlen(message)];
+	memset (buffer,'\0',strlen(buffer));
+	strcpy (buffer,message);
+	buffer[strlen(buffer)-1]='\n';
+	for (i=0;i<5;i++)
+	{
+		if (strcmp (buffer,cache_list[i]->url)==0)
+		{
+			printf ("MATCH\n");
+		}
+	}
+	return 0;
 }
 /* set/delete values in cache and cached files */
-void set_cache (FILE* f_cache, CACHE* cache_list)
+void set_cache (FILE* f_cache, CACHE** cache_list)
 {
 
 }
@@ -99,7 +111,7 @@ void set_cache (FILE* f_cache, CACHE* cache_list)
 int main (void)
 {
 	int sock_descript, sock_cli_ser, sock_inet, size;
-	int i, j, boolean, check_blist;
+	int i, j, boolean, check_blist, check_cache;
 	int size_recv;
 	struct sockaddr_in server, client, proxy;
 	char message[MESLEN], url[MESLEN-256], host[256], buffer[MESLEN],cache_buffer[256];
@@ -203,16 +215,14 @@ int main (void)
 	}
 
 	/* check cache */
+	check_cache=chk_cache(cache_list, message);
 
 //	printf ("message:%s\n", message); // testing
 	parse_client (message, url, host);
 	printf ("url: %s\thost: %s\n",url,host);
 
-
-	printf ("blist: %d",check_blist);
-
-
-	if (check_blist==0)
+	/* send HTTP request */
+	if (check_blist==0 && check_cache==0)
 	{
 		/* find ip addess based on host */
 		if ((he = gethostbyname(host))==NULL)
