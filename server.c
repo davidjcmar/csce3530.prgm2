@@ -160,6 +160,10 @@ printf ("old %d: %s\n",i, cache_list[i]->url);
 		fputs(cache_list[i]->data,f_cache);
 		fputs("\n",f_cache);
 	}
+	for (i=0;i<5;i++)
+	{
+		printf ("cache_list: %s\n",cache_list[i]->url);
+	}
 	fclose(f_cache);
 	return (cache_list[0]->data);
 
