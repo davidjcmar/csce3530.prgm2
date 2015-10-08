@@ -66,11 +66,30 @@ void request (char* message, char* url, char* host)
 	strcat(message,host);
 	strcat(message,"\r\n\r\n");
 }
+
+int chk_blist (FILE* f_blist, char* message, char blist[][256])
+{
+	int i;
+	char buffer[strlen(message)];
+	memset (buffer,'\0',strlen(message));
+	strcpy (buffer,message);
+	i=0;
+	f_blist=fopen("blacklist.txt","r");
+	buffer[strlen(buffer)-1]='\n';
+	while (i<25 && fgets(blist[i],256,f_blist)!=NULL)
+	{
+		if (strcmp (buffer,blist[i])==0)
+			return 1;
+		i++;
+	} 
+	fclose(f_blist);
+	return 0;
+}
 /* main function */
 int main (void)
 {
 	int sock_descript, sock_cli_ser, sock_inet, size;
-	int i, j, boolean;
+	int i, j, boolean, check_blist;
 	int size_recv;
 	struct sockaddr_in server, client, proxy;
 	char message[MESLEN], url[MESLEN-256], host[256], buffer[MESLEN],cache_buffer[256];
@@ -165,20 +184,13 @@ int main (void)
 
 
 	/* check blacklist */
-	i=0;
-	f_blist=fopen("blacklist.txt","r");
-	message[strlen(message)-1]='\n';
-	while (i<25 && fgets(blist[i],256,f_blist)!=NULL)
+	check_blist = chk_blist(f_blist,message,blist);
+	if (check_blist==1)
 	{
-		if (strcmp (message,blist[i])==0)
-		{
-			strcpy (message,"That URL is blacklisted.");
-			write(sock_cli_ser,message, strlen(message));
-			return 1;
-		}
-		i++;
-	} 
-	fclose(f_blist);
+		strcpy (message,"That URL is blacklisted.");
+		write(sock_cli_ser,message, strlen(message));
+	}
+
 	/* check cache */
 
 //	printf ("message:%s\n", message); // testing
@@ -189,95 +201,95 @@ int main (void)
 
 
 
-while (0)
-{
-	/* find ip addess based on host */
-	if ((he = gethostbyname(host))==NULL)
+	if (check_blist==0)
 	{
-		printf ("Get host by name failed");
-		close (sock_descript);
-		close (sock_cli_ser);
-		return 1;
-	}
-	addr_list = (struct in_addr **) he->h_addr_list;
-	/* add ip to addr_list */
-	for (i=0; addr_list[i]!=NULL;i++)
-	{
-		strcpy (ip_addr,inet_ntoa(*addr_list[i]));
-	}
-	printf ("host: %s\t resolved to: %s\n", host, ip_addr); //testing
+		/* find ip addess based on host */
+		if ((he = gethostbyname(host))==NULL)
+		{
+			printf ("Get host by name failed");
+			close (sock_descript);
+			close (sock_cli_ser);
+			return 1;
+		}
+		addr_list = (struct in_addr **) he->h_addr_list;
+		/* add ip to addr_list */
+		for (i=0; addr_list[i]!=NULL;i++)
+		{
+			strcpy (ip_addr,inet_ntoa(*addr_list[i]));
+		}
+		printf ("host: %s\t resolved to: %s\n", host, ip_addr); //testing
 
-	/* create socket to inet */
-	sock_inet=socket(AF_INET,SOCK_STREAM,0);
-	if (sock_inet==-1)
-	{
-		printf ("Failed to create socket.\n");
-		close (sock_descript);
-		close (sock_cli_ser);
-		return 1;
-	}
-	/* set fields in sockaddr_in struct */
-	proxy.sin_family=AF_INET;
-	proxy.sin_addr.s_addr= inet_addr(ip_addr);
-	proxy.sin_port=htons(80);
-	/* bind socket */
-	if (connect(sock_inet,(struct sockaddr*)&proxy, sizeof(proxy)) < 0)
-	{
-		printf ("Connection failed.\n");
-		close (sock_descript);
-		close (sock_cli_ser);
-		close (sock_inet);
-		return 1;
-	}
-	printf ("Connected.\n");
-	request(message,url,host);
-	printf ("%s", message);
+		/* create socket to inet */
+		sock_inet=socket(AF_INET,SOCK_STREAM,0);
+		if (sock_inet==-1)
+		{
+			printf ("Failed to create socket.\n");
+			close (sock_descript);
+			close (sock_cli_ser);
+			return 1;
+		}
+		/* set fields in sockaddr_in struct */
+		proxy.sin_family=AF_INET;
+		proxy.sin_addr.s_addr= inet_addr(ip_addr);
+		proxy.sin_port=htons(80);
+		/* bind socket */
+		if (connect(sock_inet,(struct sockaddr*)&proxy, sizeof(proxy)) < 0)
+		{
+			printf ("Connection failed.\n");
+			close (sock_descript);
+			close (sock_cli_ser);
+			close (sock_inet);
+			return 1;
+		}
+		printf ("Connected.\n");
+		request(message,url,host);
+		printf ("%s", message);
 
-	/* send request to webserver on port 80 */
-	if (send(sock_inet,message,strlen(message),0) < 0)
-	{
-		printf ("Request failed.\n");
-		close (sock_descript);
-		close (sock_cli_ser);
-		close (sock_inet);
-		return 1;
-	}
-	memset (buffer,'\0',MESLEN); // reset buffer
-	/* accept response from webserver */
-	/*if (recv(sock_inet,buffer,MESLEN,0) < 0)
-	{
-		printf ("No reply from webserver.\n");
-		close (sock_descript);
-		close (sock_cli_ser);
-		close (sock_inet);
-		return 1;
-	}*/
+		/* send request to webserver on port 80 */
+		if (send(sock_inet,message,strlen(message),0) < 0)
+		{
+			printf ("Request failed.\n");
+			close (sock_descript);
+			close (sock_cli_ser);
+			close (sock_inet);
+			return 1;
+		}
+		memset (buffer,'\0',MESLEN); // reset buffer
+		/* accept response from webserver */
+		/*if (recv(sock_inet,buffer,MESLEN,0) < 0)
+		{
+			printf ("No reply from webserver.\n");
+			close (sock_descript);
+			close (sock_cli_ser);
+			close (sock_inet);
+			return 1;
+		}*/
 
-	size_recv=0;
-	memset (message, '\0', MESLEN);
-	size_recv=recv(sock_inet,buffer,MESLEN,MSG_PEEK);
-	if (size_recv < 0)
-	{
-		printf ("No reply from webserver.\n");
-		close (sock_descript);
-		close (sock_cli_ser);
-		close (sock_inet);
-		return 1;
-	}
-	else
-	{
-		recv (sock_inet, buffer, MESLEN, 0);
-		write (sock_cli_ser, buffer, strlen(buffer));
-	}
+		size_recv=0;
+		memset (message, '\0', MESLEN);
+		size_recv=recv(sock_inet,buffer,MESLEN,MSG_PEEK);
+		if (size_recv < 0)
+		{
+			printf ("No reply from webserver.\n");
+			close (sock_descript);
+			close (sock_cli_ser);
+			close (sock_inet);
+			return 1;
+		}
+		else
+		{
+			recv (sock_inet, buffer, MESLEN, 0);
+			write (sock_cli_ser, buffer, strlen(buffer));
+		}
 
-//	printf ("size_recv: %d\n",size_recv);
-	
-//	printf ("%s",buffer); //testing 
-//	printf ("strlen: %d\n",strlen(buffer)); //testing
+	//	printf ("size_recv: %d\n",size_recv);
+		
+	//	printf ("%s",buffer); //testing 
+	//	printf ("strlen: %d\n",strlen(buffer)); //testing
 
-	/* write request to client socket */
-//	write (sock_cli_ser, buffer, strlen(buffer));
-}
+		/* write request to client socket */
+	//	write (sock_cli_ser, buffer, strlen(buffer));
+	}
 	close (sock_inet);
 	close (sock_descript);
 	close (sock_cli_ser);
