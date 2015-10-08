@@ -116,6 +116,8 @@ int main (void)
 //			f_buffer=fopen(cache_list[i]->data,"r");
 		}
 	}
+	fclose (f_blist);
+	fclose (f_cache);
 	/* create socket to client */
 	sock_descript=socket(AF_INET,SOCK_STREAM,0);
 	if (sock_descript==-1)
@@ -164,6 +166,7 @@ int main (void)
 
 	/* check blacklist */
 	i=0;
+	f_blist=fopen("blacklist.txt","r");
 	while (i<25 && fgets(blist[i],256,f_blist)!=NULL)
 	{
 printf ("in blist check\n");
@@ -177,6 +180,7 @@ printf ("%s %d\n", blist[i],strlen(blist[i]));
 		}
 		i++;
 	} 
+	fclose(f_blist);
 	/* check cache */
 
 //	printf ("message:%s\n", message); // testing
@@ -279,5 +283,8 @@ while (0)
 	close (sock_inet);
 	close (sock_descript);
 	close (sock_cli_ser);
+	fclose (f_blist);
+	fclose (f_cache);
+	fclose (f_buffer);
 	return 0;
 }
