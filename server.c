@@ -159,13 +159,14 @@ int main (void)
 	strcpy (message,"Enter a URL for which you want a HTTP request (do not include http://): ");
 	write (sock_cli_ser, message, strlen(message));
 	memset(message,'\0',MESLEN);
-	read (sock_cli_ser, message, MESLEN);
+	read (sock_cli_ser, message, 256);
 
 
 	/* check blacklist */
 	i=0;
 	while (i<25 && fgets(blist[i],256,f_blist)!=NULL)
 	{
+
 		if (strcmp (message,blist[i])==0)
 		{
 			strcpy (message,"That URL is blacklisted.");
@@ -184,7 +185,8 @@ int main (void)
 
 
 
-
+while (0)
+{
 	/* find ip addess based on host */
 	if ((he = gethostbyname(host))==NULL)
 	{
@@ -271,7 +273,7 @@ int main (void)
 
 	/* write request to client socket */
 //	write (sock_cli_ser, buffer, strlen(buffer));
-
+}
 	close (sock_inet);
 	close (sock_descript);
 	close (sock_cli_ser);
