@@ -88,7 +88,6 @@ int chk_blist (FILE* f_blist, char* message, char blist[][256])
 /* check if page is in cache */
 int chk_cache (CACHE** cache_list, char* message)
 {
-	printf ("WIENER\n");
 	int i;
 	char buffer[strlen(message)];
 	memset (buffer,'\0',strlen(buffer));
@@ -96,7 +95,7 @@ int chk_cache (CACHE** cache_list, char* message)
 	buffer[strlen(buffer)-1]='\0';
 	for (i=0;i<5;i++)
 	{
-		printf ("%d %d %s\n",strlen(buffer),strlen(cache_list[i]->url), cache_list[i]->url);
+//		printf ("%d %d %s\n",strlen(buffer),strlen(cache_list[i]->url), cache_list[i]->url);
 		if (strcmp (buffer,cache_list[i]->url)==0)
 		{
 			printf ("Cache hit\n");
