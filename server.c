@@ -99,11 +99,11 @@ int chk_cache (CACHE** cache_list, char* message)
 		printf ("%d %d %s\n",strlen(buffer),strlen(cache_list[i]->url), cache_list[i]->url);
 		if (strcmp (buffer,cache_list[i]->url)==0)
 		{
-			printf ("MATCH\n");
-			return 1;
+			printf ("Cache hit\n");
+			return i;
 		}
 	}
-	return 0;
+	return -1;
 }
 /* set/delete values in cache and cached files */
 void set_cache (FILE* f_cache, CACHE** cache_list)
@@ -224,8 +224,14 @@ int main (void)
 	parse_client (message, url, host);
 	printf ("url: %s\thost: %s\n",url,host);
 
+	if (check_cache >= 0)
+	{
+		f_buffer=fopen(cache_list[check_cache]->data,"r");
+		while (fgets (message, MESLEN,f_buffer)!=NULL)
+			write (sock_cli_ser,message,strlen(message));
+	}
 	/* send HTTP request */
-	if (check_blist==0 && check_cache==0)
+	if (check_blist==0 && check_cache<0)
 	{
 		/* find ip addess based on host */
 		if ((he = gethostbyname(host))==NULL)
