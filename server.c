@@ -108,7 +108,7 @@ int chk_cache (CACHE** cache_list, char* message)
 char* set_cache (FILE* f_cache, CACHE** cache_list, int id, char* new_url)
 {
 	int i;
-	char new_data[strlen(new_url)+7];
+	char new_data[strlen(new_url)+8];
 	CACHE* temp_node=(CACHE*)malloc(sizeof(CACHE));
 
 	if (id!=4)
@@ -131,7 +131,9 @@ char* set_cache (FILE* f_cache, CACHE** cache_list, int id, char* new_url)
 		strcpy(new_data,"cache/");
 		strcat(new_data,new_url);
 		strcpy(cache_list[0]->data,new_data);
-printf ("new_data: %s\n", cache_list[0]->data);
+		if (cache_list[0][strlen(new_data)-1]=='\n')
+			cache_list[0][strlen(new_data)-1]='\0';
+printf ("new_data: %s %d\n", cache_list[0]->data,strlen(cache_list[0]->data));
 	}
 	/* rearrange existing elements */
 	else
@@ -148,7 +150,9 @@ printf ("new_data: %s\n", cache_list[0]->data);
 	for (i=0;i<5;i++)
 	{
 		fputs(cache_list[i]->url,f_cache);
+		fputs("\n",f_cache);
 		fputs(cache_list[i]->data,f_cache);
+		fputs("\n",f_cache);
 	}
 	fclose(f_cache);
 	return (cache_list[0]->data);
@@ -272,7 +276,11 @@ int main (void)
 	{
 		f_buffer=fopen(cache_list[check_cache]->data,"r");
 		while (fgets (message, MESLEN,f_buffer)!=NULL)
+		{
 			write (sock_cli_ser,message,strlen(message));
+			printf ("message: %s\n", message);
+		}
+
 		set_cache(f_cache, cache_list,check_cache,"");
 	}
 	/* send HTTP request */
@@ -356,6 +364,7 @@ int main (void)
 		{
 			recv (sock_inet, buffer, MESLEN, 0);
 			f_buffer=fopen(cache_list[0]->data,"w");
+
 			fputs(buffer,f_buffer);
 			write (sock_cli_ser, buffer, strlen(buffer));
 		}
