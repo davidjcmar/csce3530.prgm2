@@ -172,6 +172,7 @@ int main (void)
 printf ("in blist check\n");
 printf ("%s %d\n", message,strlen(message));
 printf ("%s %d\n", blist[i],strlen(blist[i]));
+printf ("strcmp: %d", strcmp(message,blist[i]));
 		if (strcmp (message,blist[i])==0)
 		{
 			strcpy (message,"That URL is blacklisted.");
