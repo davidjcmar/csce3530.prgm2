@@ -209,7 +209,7 @@ int main (void)
 	printf ("url: %s\thost: %s\n",url,host);
 
 
-
+	printf ("blist: %d",check_blist);
 
 
 	if (check_blist==0)
