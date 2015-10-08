@@ -124,11 +124,15 @@ char* set_cache (FILE* f_cache, CACHE** cache_list, int id, char* new_url)
 	if (id<0)
 	{
 		/* new element to cache */
-		for (i=4;i>0;i--)
+		for (i=0;i<4;i++)
+		{
+			cache_list[i+1]=cache_list[i];
+		}
+		/*(for (i=4;i>0;i--)
 		{
 printf ("new %d: %s\n",i, cache_list[i]->url);
 			cache_list[i]=cache_list[i-1];
-		}
+		}*/
 		strcpy(cache_list[0]->url,new_url);
 		memset(new_data,'\0',strlen(new_url)+7);
 		strcpy(new_data,"cache/");
@@ -144,11 +148,15 @@ printf ("new_data: %s %d\n", cache_list[0]->data,strlen(cache_list[0]->data));
 	else
 	{
 		temp_node=cache_list[id];
-		for (i=4;i>0;i--)
+		for (i=0;i<4;i++)
+		{
+			cache_list[i+1]=cache_list[i];
+		}
+		/*for (i=4;i>0;i--)
 		{
 printf ("old %d: %s\n",i, cache_list[i]->url);
 			cache_list[i]=cache_list[i-1];
-		}
+		}*/
 		cache_list[0]=temp_node;
 	}
 	/* write cache to file */
