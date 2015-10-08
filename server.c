@@ -144,6 +144,7 @@ printf ("new_data: %s %d\n", cache_list[0]->data,strlen(cache_list[0]->data));
 		temp_node=cache_list[id];
 		for (i=4;i>0;i--)
 		{
+			printf ("%d: %s\n",i, cache_list[i]->url);
 			cache_list[i]=cache_list[i-1];
 		}
 		cache_list[0]=temp_node;
