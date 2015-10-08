@@ -96,7 +96,7 @@ int chk_cache (CACHE** cache_list, char* message)
 	buffer[strlen(buffer)-1]='\n';
 	for (i=0;i<5;i++)
 	{
-		printf ("%s", cache_list[i]->url);
+		printf ("%d %d %s\n",strlen(buffer),strlen(cache_list[i]->url), cache_list[i]->url);
 		if (strcmp (buffer,cache_list[i]->url)==0)
 		{
 			printf ("MATCH\n");
