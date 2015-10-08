@@ -88,6 +88,7 @@ int chk_blist (FILE* f_blist, char* message, char blist[][256])
 /* check if page is in cache */
 int chk_cache (CACHE** cache_list, char* message)
 {
+	printf ("WIENER\n");
 	int i;
 	char buffer[strlen(message)];
 	memset (buffer,'\0',strlen(buffer));
