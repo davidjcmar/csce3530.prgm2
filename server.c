@@ -105,8 +105,52 @@ int chk_cache (CACHE** cache_list, char* message)
 	return -1;
 }
 /* set/delete values in cache and cached files */
-void set_cache (FILE* f_cache, CACHE** cache_list)
+char* set_cache (FILE* f_cache, CACHE** cache_list, int id, char* new_url)
 {
+	int i;
+	char new_data[strlen(new_url)+7];
+	CACHE* temp_node=(CACHE*)malloc(sizeof(CACHE));
+
+	if (id!=4)
+	{
+		remove (cache_list[4]->data);
+	}
+	else
+	{
+		remove (cache_list[3]->data);
+	}
+	if (id<0)
+	{
+		/* new element to cache */
+		for (i=4;i>0;i--)
+		{
+			cache_list[i]=cache_list[i-1];
+		}
+		strcpy(cache_list[0]->url,new_url);
+		memset(new_data,'\0',strlen(new_url)+7);
+		strcpy(new_data,"cache/");
+		strcat(new_data,new_url);
+		strcpy(cache_list[0]->data,new_data);
+	}
+	/* rearrange existing elements */
+	else
+	{
+		temp_node=cache_list[id];
+		for (i=4;i>0;i--)
+		{
+			cache_list[i]=cache_list[i-1];
+		}
+		cache_list[0]=temp_node;
+	}
+	/* write cache to file */
+	f_cache=fopen("list.txt","w");
+	for (i=0;i<5;i++)
+	{
+		fputs(cache_list[i]->url,f_cache);
+		fputs(cache_list[i]->data,f_cache);
+	}
+	fclose(f_cache);
+	return (cache_list[0]->data);
 
 }
 /* main function */
@@ -228,10 +272,12 @@ int main (void)
 		f_buffer=fopen(cache_list[check_cache]->data,"r");
 		while (fgets (message, MESLEN,f_buffer)!=NULL)
 			write (sock_cli_ser,message,strlen(message));
+		set_cache(f_cache, cache_list,check_cache,"");
 	}
 	/* send HTTP request */
 	if (check_blist==0 && check_cache<0)
 	{
+		set_cache(f_cache, cache_list, check_cache, message); // set new cache
 		/* find ip addess based on host */
 		if ((he = gethostbyname(host))==NULL)
 		{
@@ -308,6 +354,8 @@ int main (void)
 		else
 		{
 			recv (sock_inet, buffer, MESLEN, 0);
+			f_buffer=fopen(cache_list[0]->data,"w");
+			fputs(buffer,f_buffer);
 			write (sock_cli_ser, buffer, strlen(buffer));
 		}
 
