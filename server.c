@@ -4,6 +4,7 @@ CSCE 3530 Program 2
 10/8/2015
 */
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
 #include <unistd.h>
@@ -13,6 +14,10 @@ CSCE 3530 Program 2
 #define MESLEN 1000000 // message length
 #define PORTNUM 56565 // server port number
 
+typedef struct {
+	char url[256];
+	char data[256];
+}CACHE;
 /* parse url from client for GET request */
 void parse_client (char* message, char* url, char* host)
 {
@@ -65,14 +70,52 @@ void request (char* message, char* url, char* host)
 int main (void)
 {
 	int sock_descript, sock_cli_ser, sock_inet, size;
-	int i,boolean;
+	int i, j, boolean;
 	int size_recv;
 	struct sockaddr_in server, client, proxy;
-	char message[MESLEN], url[MESLEN-256], host[256], buffer[MESLEN];
+	char message[MESLEN], url[MESLEN-256], host[256], buffer[MESLEN],cache_buffer[256];
 	struct hostent* he;
 	struct in_addr** addr_list;
 	char ip_addr[50];
+	char blist[25][256];
+	FILE *f_blist, *f_cache, *f_buffer;
+	CACHE* cache_list[5];
 
+	/* open file pointers to cache and blacklist */
+	f_cache=fopen("list.txt","a+");
+	f_blist=fopen("blacklist.txt","r");
+	/* init blacklist */
+	for (i=0;i<25;i++)
+	{
+		memset(blist[i],'\0',256);
+	}
+	i=0;
+	while (i<25 && fgets(blist[i],256,f_blist)!=NULL)
+	{
+		if (blist[i][strlen(blist[i])-1]=='\n')	
+		{
+			blist[i][strlen(blist[i])-1]='\0'; //overwrite newline
+		}
+		i++;
+	}
+	/* init cache */
+	memset (cache_buffer,'\0',256);
+	for (i=0;i<5;i++)
+	{
+		cache_list[i]= (CACHE*)malloc(sizeof(CACHE));
+		memset (cache_list[i]->url,'\0',256);
+		memset (cache_list[i]->data,'\0',256);
+		if (fgets(cache_list[i]->url,256,f_cache)!=NULL)
+		{
+			fgets(cache_list[i]->data,256,f_cache);
+			if (cache_list[i]->url[strlen(cache_list[i]->url)-1]=='\n')
+				cache_list[i]->url[strlen(cache_list[i]->url)-1]='\0'; //overwrite newline
+			if (cache_list[i]->data[strlen(cache_list[i]->data)-1]=='\n')
+				cache_list[i]->data[strlen(cache_list[i]->data)-1]='\0'; //overwrite newline
+//			printf ("%s",cache_list[i]->data);
+//			f_buffer=fopen(cache_list[i]->data,"r");
+		}
+	}
 	/* create socket to client */
 	sock_descript=socket(AF_INET,SOCK_STREAM,0);
 	if (sock_descript==-1)
@@ -117,9 +160,29 @@ int main (void)
 	write (sock_cli_ser, message, strlen(message));
 	memset(message,'\0',MESLEN);
 	read (sock_cli_ser, message, MESLEN);
+
+
+	/* check blacklist */
+	i=0;
+	while (i<25 && fgets(blist[i],256,f_blist)!=NULL)
+	{
+		if (strcmp (message,blist[i])==0)
+		{
+			strcpy (message,"That URL is blacklisted.");
+			write(sock_cli_ser,message, strlen(message));
+			return 1;
+		}
+	} 
+	/* check cache */
+
 //	printf ("message:%s\n", message); // testing
 	parse_client (message, url, host);
 	printf ("url: %s\thost: %s\n",url,host);
+
+
+
+
+
 
 	/* find ip addess based on host */
 	if ((he = gethostbyname(host))==NULL)
