@@ -77,6 +77,7 @@ int chk_blist (char* message, char blist[][256])
 	buffer[strlen(buffer)-1]='\n';
 	while (i<25 && strlen(blist[i])!=0)
 	{
+		printf ("%s", blist[i]);
 		if (strcmp (buffer,blist[i])==0)
 			return 1;
 		i++;
