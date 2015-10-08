@@ -189,6 +189,7 @@ int main (void)
 	{
 		strcpy (message,"That URL is blacklisted.");
 		write(sock_cli_ser,message, strlen(message));
+		return 1;
 	}
 
 	/* check cache */
@@ -293,8 +294,5 @@ int main (void)
 	close (sock_inet);
 	close (sock_descript);
 	close (sock_cli_ser);
-	fclose (f_blist);
-	fclose (f_cache);
-	fclose (f_buffer);
 	return 0;
 }
