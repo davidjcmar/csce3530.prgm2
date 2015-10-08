@@ -124,6 +124,7 @@ char* set_cache (FILE* f_cache, CACHE** cache_list, int id, char* new_url)
 		/* new element to cache */
 		for (i=4;i>0;i--)
 		{
+			printf ("i: %s\n", cache_list[i]->url);
 			cache_list[i]=cache_list[i-1];
 		}
 		strcpy(cache_list[0]->url,new_url);
