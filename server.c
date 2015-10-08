@@ -110,14 +110,16 @@ char* set_cache (FILE* f_cache, CACHE** cache_list, int id, char* new_url)
 	int i;
 	char new_data[strlen(new_url)+8];
 	CACHE* temp_node=(CACHE*)malloc(sizeof(CACHE));
-
-	if (id!=4)
-	{
-		remove (cache_list[4]->data);
-	}
-	else
-	{
-		remove (cache_list[3]->data);
+	if (strcmp(cache_list[4]->url,"")==0)
+	{	
+		if (id!=4)
+		{
+			remove (cache_list[4]->data);
+		}
+		else
+		{
+			remove (cache_list[3]->data);
+		}
 	}
 	if (id<0)
 	{
