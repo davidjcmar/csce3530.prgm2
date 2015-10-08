@@ -100,7 +100,7 @@ int chk_cache (CACHE** cache_list, char* message)
 		if (strcmp (buffer,cache_list[i]->url)==0)
 		{
 			printf ("MATCH\n");
-			break;
+			return 1;
 		}
 	}
 	return 0;
