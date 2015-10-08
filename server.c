@@ -131,6 +131,7 @@ char* set_cache (FILE* f_cache, CACHE** cache_list, int id, char* new_url)
 		strcpy(new_data,"cache/");
 		strcat(new_data,new_url);
 		strcpy(cache_list[0]->data,new_data);
+printf ("new_data: %s\n", cache_list[0]->data);
 	}
 	/* rearrange existing elements */
 	else
