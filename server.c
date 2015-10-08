@@ -94,10 +94,7 @@ int main (void)
 	{
 		if (blist[i][strlen(blist[i])-1]=='\n')	
 		{
-printf ("wiener");
-printf ("%d", strlen (blist[i]));
 			blist[i][strlen(blist[i])-1]='\0'; //overwrite newline
-printf (" %d\n", strlen (blist[i]));
 		}
 		i++;
 	}
@@ -173,10 +170,6 @@ printf (" %d\n", strlen (blist[i]));
 	message[strlen(message)-1]='\n';
 	while (i<25 && fgets(blist[i],256,f_blist)!=NULL)
 	{
-printf ("in blist check\n");
-printf ("%s %d\n", message,strlen(message));
-printf ("%s %d\n", blist[i],strlen(blist[i]));
-printf ("strcmp: %d", strcmp(message,blist[i]));
 		if (strcmp (message,blist[i])==0)
 		{
 			strcpy (message,"That URL is blacklisted.");
