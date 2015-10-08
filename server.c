@@ -172,6 +172,7 @@ int main (void)
 			write(sock_cli_ser,message, strlen(message));
 			return 1;
 		}
+		i++;
 	} 
 	/* check cache */
 
