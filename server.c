@@ -67,21 +67,22 @@ void request (char* message, char* url, char* host)
 	strcat(message,"\r\n\r\n");
 }
 /* check if url is blackisted. return 1 if blacklisted, 0 if not */
-int chk_blist (char* message, char blist[][256])
+int chk_blist (FILE* f_blist, char* message, char blist[][256])
 {
 	int i;
 	char buffer[strlen(message)];
 	memset (buffer,'\0',strlen(message));
 	strcpy (buffer,message);
 	i=0;
+	f_blist=fopen("blacklist.txt","r");
 	buffer[strlen(buffer)-1]='\n';
-	while (i<25 && strlen(blist[i])!=0)
+	while (i<25 && fgets(blist[i],256,f_blist)!=NULL)
 	{
-		printf ("%s", blist[i]);
 		if (strcmp (buffer,blist[i])==0)
 			return 1;
 		i++;
 	} 
+	fclose(f_blist);
 	return 0;
 }
 /* check if page is in cache */
@@ -110,7 +111,7 @@ int main (void)
 	CACHE* cache_list[5];
 
 	/* open file pointers to cache and blacklist */
-	f_cache=fopen("list.txt","r");
+	f_cache=fopen("list.txt","a+");
 	f_blist=fopen("blacklist.txt","r");
 	/* init blacklist */
 	for (i=0;i<25;i++)
@@ -193,7 +194,7 @@ int main (void)
 
 
 	/* check blacklist */
-	check_blist = chk_blist(message,blist);
+	check_blist = chk_blist(f_blist,message,blist);
 	if (check_blist==1)
 	{
 		strcpy (message,"That URL is blacklisted.");
